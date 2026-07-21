@@ -2,18 +2,22 @@
   "name": "devops_project",
   "version": "1.0.0",
   "description": "",
-  "homepage": "https://github.com/S1R15H/DevOps_project#readme",
-  "bugs": {
-    "url": "https://github.com/S1R15H/DevOps_project/issues"
+  "main": "index.js",
+  "scripts": {
+    "dev": "node --watch src/index.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/S1R15H/DevOps_project.git"
   },
-  "type": "commonjs",
-  "main": "index.js",
-  "scripts": {
-    "run": "node index.js",
-    "test": "node test.js"
+  "keywords": [],
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/S1R15H/DevOps_project/issues"
+  },
+  "homepage": "https://github.com/S1R15H/DevOps_project#readme",
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1"
   }
 }
