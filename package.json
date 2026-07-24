@@ -34,6 +34,8 @@
   },
   "homepage": "https://github.com/S1R15H/DevOps_project#readme",
   "dependencies": {
+    "@arcjet/inspect": "^1.9.1",
+    "@arcjet/node": "^1.9.1",
     "@neondatabase/serverless": "^1.1.0",
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
