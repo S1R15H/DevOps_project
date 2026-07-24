@@ -1,7 +1,7 @@
 import request from 'supertest';
 import app from '#src/app';
 
-describe ('API Endpoints', () => {
+describe('API Endpoints', () => {
   describe('GET /health', () => {
     it('should return health status', async () => {
       const response = await request(app).get('/health');
@@ -16,7 +16,6 @@ describe ('API Endpoints', () => {
       const response = await request(app).get('/api');
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty('message', 'API is running');
-            
     });
   });
   describe('GET /nonexistent', () => {
@@ -24,7 +23,6 @@ describe ('API Endpoints', () => {
       const response = await request(app).get('/nonexistent');
       expect(response.status).toBe(404);
       expect(response.body).toHaveProperty('error', 'Not Found');
-            
     });
   });
 });

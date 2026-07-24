@@ -25,7 +25,7 @@ const aj = arcjet({
       // Allow 10 requests per minute, with a burst of 5 requests
       interval: '2s',
       max: 5,
-    })
+    }),
   ],
 });
 export default aj;

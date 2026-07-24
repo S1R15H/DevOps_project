@@ -6,7 +6,6 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import authRoutes from '#routes/auth.routes';
 import usersRoutes from '#routes/users.routes';
-import securityMiddleware from '#middleware/security.middleware';
 
 const app = express();
 app.use(helmet());
@@ -14,8 +13,11 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(morgan('combined', { stream: { write: (message) => logger.info(message.trim()) } }));
-app.use(securityMiddleware);
+app.use(
+  morgan('combined', {
+    stream: { write: message => logger.info(message.trim()) },
+  })
+);
 
 app.get('/', (req, res) => {
   logger.info('Received request for home page');
@@ -23,18 +25,25 @@ app.get('/', (req, res) => {
 });
 
 app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'OK', timestamp: new Date().toISOString(), uptime: process.uptime() });
+  res.status(200).json({
+    status: 'OK',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+  });
 });
 
 app.get('/api', (req, res) => {
   res.status(200).json({ message: 'API is running' });
 });
 
-app.use('/api/auth',authRoutes);
+app.use('/api/auth', authRoutes);
 app.use('/api/users', usersRoutes);
 
-app.use((req,res)=>{
-  res.status(404).json({ error: 'Not Found', message: 'The requested resource was not found on this server.' });
+app.use((req, res) => {
+  res.status(404).json({
+    error: 'Not Found',
+    message: 'The requested resource was not found on this server.',
+  });
 });
 
 export default app;

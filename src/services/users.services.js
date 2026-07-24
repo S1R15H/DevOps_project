@@ -6,32 +6,38 @@ import { hashPassword } from '#services/auth.service';
 
 export const getAllUsers = async () => {
   try {
-    const allUsers = db.select({
-      id: users.id,
-      name: users.name,
-      email: users.email,
-      role: users.role,
-      createdAt: users.createdAt,
-      updatedAt: users.updatedAt
-    }).from(users);
+    const allUsers = db
+      .select({
+        id: users.id,
+        name: users.name,
+        email: users.email,
+        role: users.role,
+        createdAt: users.createdAt,
+        updatedAt: users.updatedAt,
+      })
+      .from(users);
 
     return allUsers;
   } catch (e) {
     logger.error(`Error fetching all users: ${e}`);
     throw e;
-  }               
+  }
 };
 
-export const getUserById = async (id) => {
+export const getUserById = async id => {
   try {
-    const [user] = await db.select({
-      id: users.id,
-      name: users.name,
-      email: users.email,
-      role: users.role,
-      createdAt: users.createdAt,
-      updatedAt: users.updatedAt
-    }).from(users).where(eq(users.id, id)).limit(1);
+    const [user] = await db
+      .select({
+        id: users.id,
+        name: users.name,
+        email: users.email,
+        role: users.role,
+        createdAt: users.createdAt,
+        updatedAt: users.updatedAt,
+      })
+      .from(users)
+      .where(eq(users.id, id))
+      .limit(1);
 
     return user;
   } catch (e) {
@@ -42,7 +48,11 @@ export const getUserById = async (id) => {
 
 export const updateUser = async (id, updates) => {
   try {
-    const [existingUser] = await db.select().from(users).where(eq(users.id, id)).limit(1);
+    const [existingUser] = await db
+      .select()
+      .from(users)
+      .where(eq(users.id, id))
+      .limit(1);
     if (!existingUser) {
       throw new Error('User not found');
     }
@@ -63,7 +73,7 @@ export const updateUser = async (id, updates) => {
         email: users.email,
         role: users.role,
         createdAt: users.createdAt,
-        updatedAt: users.updatedAt
+        updatedAt: users.updatedAt,
       });
 
     return updatedUser;
@@ -73,9 +83,13 @@ export const updateUser = async (id, updates) => {
   }
 };
 
-export const deleteUser = async (id) => {
+export const deleteUser = async id => {
   try {
-    const [existingUser] = await db.select().from(users).where(eq(users.id, id)).limit(1);
+    const [existingUser] = await db
+      .select()
+      .from(users)
+      .where(eq(users.id, id))
+      .limit(1);
     if (!existingUser) {
       throw new Error('User not found');
     }

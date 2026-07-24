@@ -4,7 +4,7 @@ This project is configured to use Docker for both Development and Production env
 
 ## 1. Development Environment (Neon Local)
 
-In development, we use **Neon Local** via Docker. This runs a proxy container alongside your application. 
+In development, we use **Neon Local** via Docker. This runs a proxy container alongside your application.
 
 When the `neon-local` container starts, it connects to your Neon Cloud account and automatically provisions an **ephemeral branch**. This gives you an isolated database environment containing production schema/data for testing, without affecting your main database. When you stop the container, the ephemeral branch is deleted.
 
@@ -13,13 +13,14 @@ When the `neon-local` container starts, it connects to your Neon Cloud account a
 1. Open `.env.development` and populate the required Neon Local variables:
    - `NEON_API_KEY`: Get this from your Neon account settings.
    - `NEON_PROJECT_ID`: The ID of your Neon project.
-   - *(The `DATABASE_URL` is already configured to point to the local proxy container).*
+   - _(The `DATABASE_URL` is already configured to point to the local proxy container)._
 
 2. Start the development environment:
+
    ```bash
    # Make sure your environment variables are loaded
    set -a && source .env.development && set +a
-   
+
    # Run docker-compose for dev
    docker-compose -f docker-compose.dev.yml up --build
    ```
@@ -41,5 +42,6 @@ In production, we **do not** use the Neon Local proxy. Instead, the application 
    ```
 
 ### How `DATABASE_URL` switches:
+
 - **Dev:** In `docker-compose.dev.yml`, the app loads `.env.development` where `DATABASE_URL` points to `neon-local:5432`.
 - **Prod:** In `docker-compose.prod.yml`, the app loads `.env.production` where `DATABASE_URL` points directly to your Neon `.tech` cloud database url.
