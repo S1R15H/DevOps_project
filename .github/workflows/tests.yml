@@ -1,0 +1,57 @@
+name: Tests
+
+on:
+  push:
+    branches:
+      - main
+      - staging
+  pull_request:
+    branches:
+      - main
+      - staging
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run Tests
+        id: run-tests
+        run: npm test
+        env:
+          NODE_ENV: test
+          NODE_OPTIONS: --experimental-vm-modules
+          DATABASE_URL: ${{ secrets.DATABASE_URL || 'postgresql://user:pass@localhost:5432/testdb' }}
+        continue-on-error: true
+
+      - name: Upload Coverage Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 30
+          
+      - name: Generate Step Summary and Check Status
+        if: always()
+        run: |
+          echo "### Test Execution Results 🧪" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ steps.run-tests.outcome }}" == "success" ]; then
+            echo "✅ All tests passed successfully!" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Tests failed. Please inspect the logs and coverage reports." >> $GITHUB_STEP_SUMMARY
+            echo "::error title=Test Execution Failed::One or more tests failed. Check the action logs or coverage report for details."
+            exit 1
+          fi

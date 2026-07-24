@@ -1,0 +1,54 @@
+name: Lint and Format
+
+on:
+  push:
+    branches:
+      - main
+      - staging
+  pull_request:
+    branches:
+      - main
+      - staging
+
+jobs:
+  lint-and-format:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        id: eslint
+        run: npm run lint
+        continue-on-error: true
+
+      - name: Run Prettier Check
+        id: prettier
+        run: npm run format:check
+        continue-on-error: true
+
+      - name: Report Status and Fail if Necessary
+        if: always()
+        run: |
+          has_error=false
+          if [ "${{ steps.eslint.outcome }}" == "failure" ]; then
+            echo "::error title=ESLint Errors Found::Please run 'npm run lint:fix' locally to fix ESLint issues."
+            has_error=true
+          fi
+          if [ "${{ steps.prettier.outcome }}" == "failure" ]; then
+            echo "::error title=Prettier Errors Found::Please run 'npm run format' locally to fix formatting issues."
+            has_error=true
+          fi
+          
+          if [ "$has_error" = true ]; then
+            exit 1
+          fi
